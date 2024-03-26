@@ -1,4 +1,7 @@
-function gameBoard () {
+const rowOne = document.querySelectorAll('.rowOne')
+const rowTwo = document.querySelectorAll('.rowTwo')
+const rowThree = document.querySelectorAll('.rowThree')
+const gameBoard = (function () {
     const rows = 3
     const columns = 3
     winner = ''
@@ -12,6 +15,7 @@ function gameBoard () {
     }
 
     const showBoard = () => board;
+    const showCell = (row, column) => board[row][column]
     const getWinner = () => winner;
 
     const addToken = (row, column, token) => {
@@ -41,8 +45,32 @@ function gameBoard () {
         };
     };
 
-    return {showBoard, getWinner, addToken, checkWinner}
-}
+    return {showBoard, showCell, getWinner, addToken, checkWinner};
+})();
+
+
+const boardDisplay = (function(){
+    let i = 0
+    const displayOne = () => {
+        rowOne.forEach(cell => {
+            cell.textContent = `${gameBoard.showCell(0, i++)}`
+        });
+    };
+
+    const displayTwo = () => {
+        rowTwo.forEach(cell => {
+            cell.textContent = `${gameBoard.showCell(1, i++)}`
+        });
+    };
+
+    const displayThree = () => {
+        rowThree.forEach(cell => {
+            cell.textContent = `${gameBoard.showCell(0, i++)}`
+        });
+    };
+    return {displayOne, displayTwo, displayThree}
+})();
+
 
 function play (name1, name2) {
     const player1 = {
@@ -54,7 +82,6 @@ function play (name1, name2) {
         token: "O"
     };
 
-    const board = gameBoard();
     let currentPlayer = player1;
 
     const switchPlayer = () => {
@@ -62,27 +89,42 @@ function play (name1, name2) {
     }
 
     const showWinner = () => {
-        board.checkWinner()
-        if (board.getWinner() == '') {
+        gameBoard.checkWinner()
+        if (gameBoard.getWinner() == '') {
             switchPlayer();
             console.log(`It is now ${currentPlayer.name}'s turn`);
-        } else if (board.getWinner !== '') {
+        } else if (gameBoard.getWinner !== '') {
             console.log(`${currentPlayer.name} wins!`)
         }
     }
 
     const turn = (row, column) => {
-        board.addToken(row, column, currentPlayer.token);
+        gameBoard.addToken(row, column, currentPlayer.token);
         console.log(`${currentPlayer.name} places token on row ${row} column ${column}`)
-        console.log(board.showBoard());
+        console.log(gameBoard.showBoard());
         showWinner()
     }
 
     console.log(`It is now ${currentPlayer.name}'s turn`);
-    console.log(board.showBoard())
-
+    console.log(gameBoard.showBoard())
+    
     return {turn}
 }
 
+
+
 const test = play("Patrick", "John");
+test.turn(0,0)
+test.turn(0,1)
+test.turn(0,2)
+boardDisplay.displayOne();
+
+
+
+
+
+
+
+
+
 
