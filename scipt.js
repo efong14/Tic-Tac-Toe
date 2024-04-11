@@ -1,4 +1,4 @@
-// Note: Fix tie check
+// Note: make board clear after win condition is met
 
 const rowOne = document.querySelectorAll('.rowOne');
 const rowTwo = document.querySelectorAll('.rowTwo');
@@ -118,6 +118,26 @@ function play (name1, name2) {
         console.log(gameBoard.showBoard());
         showWinner()
     };
+
+    (function boardControl() {
+        let i = 0;
+        let j = 0;
+        let k = 0;
+        rowOne.forEach(cell => {
+            let y = i++;
+            cell.onclick = () => turn(0, y);
+        });
+        rowTwo.forEach(cell => {
+            let y = j++;
+            cell.onclick = () => turn(1, y);
+        });
+        rowThree.forEach(cell => {
+            let y = k++;
+            cell.onclick = () => turn(2, y);
+        });
+    })(); 
+
+  ;
 
     console.log(`It is now ${currentPlayer.name}'s turn`);
     console.log(gameBoard.showBoard())
