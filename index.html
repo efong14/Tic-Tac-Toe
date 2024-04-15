@@ -8,10 +8,23 @@
     <script src="scipt.js" defer></script>
 </head>
 <body>
+    <dialog open>
+        <form action="" method="dialog">
+            <div>
+                <label for="p1Name">Player 1</label>
+                <input type="text" id="p1Name" placeholder="Name" required>
+            </div>
+            <div>
+                <label for="p2Name">Player 2</label>
+                <input type="text" id="p2Name" placeholder="Name" required>
+            </div>
+            <button id="submit">Submit</button>
+        </form>
+    </dialog>
     <div class="textContainer">
         <div class="title">Tic Tac Toe</div>
-        <div class="status"> Current Player/Winner goes here</div>
-        <div class="test"></div>
+        <div class="playerStatus"></div>
+        <div class="winnerStatus"></div>
     </div>
     <div class="boardContainer">
         <div class="buttonContainer"><button class="rowOne"></button></div>

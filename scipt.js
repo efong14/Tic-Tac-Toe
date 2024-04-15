@@ -1,9 +1,17 @@
-// Note: make board clear after win condition is met
+// Note: Figure out reset :(
 
 const rowOne = document.querySelectorAll('.rowOne');
 const rowTwo = document.querySelectorAll('.rowTwo');
-const rowThree = document.querySelectorAll('.rowThree')
-;
+const rowThree = document.querySelectorAll('.rowThree');
+const textContainer = document.querySelector('.textContainer');
+const playerStatus = document.querySelector('.playerStatus');
+const winnerStatus = document.querySelector('.winnerStatus');
+const p1Name = document.getElementById('p1Name');
+const p2Name = document.getElementById('p2Name');
+
+document.getElementById('submit').onclick = () => {
+    const game = play(p1Name.value, p2Name.value);
+};
 
 const gameBoard = (function () {
     const rows = 3;
@@ -21,11 +29,11 @@ const gameBoard = (function () {
     const showBoard = () => board;
     const showCell = (row, column) => board[row][column];
     const getWinner = () => winner;
+    const reset = () => {
+        location.reload()
+    };
 
     const addToken = (row, column, token) => {
-        if (board[row][column] != '') {
-            return;
-        };
         board[row][column] = token;
     }
 
@@ -57,7 +65,7 @@ const gameBoard = (function () {
         };
     };
 
-    return {showBoard, showCell, getWinner, addToken, checkWinner};
+    return {showBoard, showCell, getWinner, addToken, checkWinner, reset};
 })();
 
 
@@ -96,27 +104,41 @@ function play (name1, name2) {
         currentPlayer == player1 ? currentPlayer = player2 : currentPlayer = player1;
     };
 
+    const resetBoard = () => {
+        const resetBtn = document.createElement('button');
+        resetBtn.classList.add('resetBtn');
+        resetBtn.onclick = () => {
+            gameBoard.reset();
+        };
+        resetBtn.textContent = 'New Game'
+        textContainer.appendChild(resetBtn);
+    };
+
     const showWinner = () => {
         gameBoard.checkWinner()
         if (gameBoard.getWinner() == '') {
             switchPlayer();
-            console.log(`It is now ${currentPlayer.name}'s turn`);
+            playerStatus.textContent = `It is now ${currentPlayer.name}'s turn`
         } else if (gameBoard.getWinner() =='Tie!') {
-            console.log(`Tie!`)
+            winnerStatus.textContent = `Tie!`;
+            playerStatus.textContent = '';
+            resetBoard();
         } else if (gameBoard.getWinner() !== '') {
-            console.log(`${currentPlayer.name} wins!`)
+            winnerStatus.textContent =`${currentPlayer.name} wins!`;
+            playerStatus.textContent = '';
+            resetBoard();
         };
     };
 
     const turn = (row, column) => {
         if (gameBoard.showCell(row, column) != ''){
             return;
+        } else if (gameBoard.getWinner() !== '') {
+            return
         };
         gameBoard.addToken(row, column, currentPlayer.token);
         boardDisplay.displayToken();
-        console.log(`${currentPlayer.name} places token on row ${row} column ${column}`)
-        console.log(gameBoard.showBoard());
-        showWinner()
+        showWinner();
     };
 
     (function boardControl() {
@@ -137,76 +159,11 @@ function play (name1, name2) {
         });
     })(); 
 
-  ;
-
-    console.log(`It is now ${currentPlayer.name}'s turn`);
-    console.log(gameBoard.showBoard())
+    playerStatus.textContent = `It is now ${currentPlayer.name}'s turn`;
     
     return {turn};
 };
 
-
-
-const test = play("Patrick", "John");
-
-// WinTest
-// Horizontal P1
-// test.turn(0,2)
-// test.turn(2,0)
-// test.turn(0,1)
-// test.turn(1,0)
-// test.turn(0,0)
-
-// Horizontal P2
-// test.turn(0,2)
-// test.turn(1,0)
-// test.turn(2,1) 
-// test.turn(1,1)
-// test.turn(0,0)
-// test.turn(1,2)
-
-
-// Vertical P1
-// test.turn(0,0)
-// test.turn(0,1)
-// test.turn(1,0)
-// test.turn(2,1)
-// test.turn(2,0)
-
-
-// Vertical P2
-// test.turn(0,2)
-// test.turn(0,0)
-// test.turn(1,1)
-// test.turn(2,0)
-// test.turn(2,2)
-// test.turn(1,0)
-
-// Diagonal p1
-// test.turn(0,0)
-// test.turn(0,1)
-// test.turn(1,1)
-// test.turn(1,0)
-// test.turn(2,2)
-
-// Diagonal p2
-// test.turn (0,2)
-// test.turn(0,0)
-// test.turn(0,1)
-// test.turn(1,1)
-// test.turn(1,0)
-// test.turn(2,2)
-
-// Tie
-// test.turn(0,1)
-// test.turn(0,0)
-// test.turn(1,2)
-// test.turn(1,0)
-// test.turn(1,1)
-// test.turn(0,2)
-// test.turn(2,0)
-// test.turn(2,1)
-// test.turn(2,2)
 
 
 
