@@ -6,11 +6,16 @@ const rowThree = document.querySelectorAll('.rowThree');
 const textContainer = document.querySelector('.textContainer');
 const playerStatus = document.querySelector('.playerStatus');
 const winnerStatus = document.querySelector('.winnerStatus');
+const gameEnd = document.querySelector('.gameEnd');
 const p1Name = document.getElementById('p1Name');
 const p2Name = document.getElementById('p2Name');
 
 document.getElementById('submit').onclick = () => {
     const game = play(p1Name.value, p2Name.value);
+};
+
+document.getElementById('newGame').onclick = () => {
+    location.reload();
 };
 
 const gameBoard = (function () {
@@ -29,26 +34,13 @@ const gameBoard = (function () {
     const showBoard = () => board;
     const showCell = (row, column) => board[row][column];
     const getWinner = () => winner;
-    const reset = () => {
-        location.reload()
-    };
+
 
     const addToken = (row, column, token) => {
         board[row][column] = token;
     }
 
     const checkWinner = () => {
-        // Tie check
-        if (!board[0].includes('') && !board[1].includes('') && !board[2].includes('')) {
-            winner = 'Tie!';
-            return;
-        };
-        // Diagonal check
-        if (board[0][0] == board[1][1] && board[1][1] == board[2][2] || board[0][2] ==
-            board[1][1] && board[1][1] == board[2][0]) {
-                winner = board[1][1];
-                return;
-            };
         // Horizontal check
         for (let i = 0; i < 3; i++){
             if (board[i][0] == board[i][1] && board[i][1] == board[i][2]) {
@@ -63,9 +55,20 @@ const gameBoard = (function () {
                     return;
             };
         };
+        // Diagonal check
+        if (board[0][0] == board[1][1] && board[1][1] == board[2][2] || board[0][2] ==
+            board[1][1] && board[1][1] == board[2][0]) {
+                winner = board[1][1];
+                return;
+            };
+        // Tie check
+        if (!board[0].includes('') && !board[1].includes('') && !board[2].includes('')) {
+            winner = 'Tie!';
+            return;
+        };
     };
 
-    return {showBoard, showCell, getWinner, addToken, checkWinner, reset};
+    return {showBoard, showCell, getWinner, addToken, checkWinner};
 })();
 
 
@@ -104,16 +107,6 @@ function play (name1, name2) {
         currentPlayer == player1 ? currentPlayer = player2 : currentPlayer = player1;
     };
 
-    const resetBoard = () => {
-        const resetBtn = document.createElement('button');
-        resetBtn.classList.add('resetBtn');
-        resetBtn.onclick = () => {
-            gameBoard.reset();
-        };
-        resetBtn.textContent = 'New Game'
-        textContainer.appendChild(resetBtn);
-    };
-
     const showWinner = () => {
         gameBoard.checkWinner()
         if (gameBoard.getWinner() == '') {
@@ -122,11 +115,11 @@ function play (name1, name2) {
         } else if (gameBoard.getWinner() =='Tie!') {
             winnerStatus.textContent = `Tie!`;
             playerStatus.textContent = '';
-            resetBoard();
+            gameEnd.showModal();
         } else if (gameBoard.getWinner() !== '') {
             winnerStatus.textContent =`${currentPlayer.name} wins!`;
             playerStatus.textContent = '';
-            resetBoard();
+            gameEnd.showModal();
         };
     };
 
